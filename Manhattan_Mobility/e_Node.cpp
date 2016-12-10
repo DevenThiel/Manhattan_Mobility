@@ -1,3 +1,17 @@
+/*************
+*
+*	Arban Nichols
+*
+*	06.15.2015
+*
+*	Deven Thiel
+*
+*	12.10.2016
+*
+*	e_Node class implementation file
+*
+*************/
+
 #include "e_Node.h"
 
 //default constructor
@@ -7,7 +21,7 @@ e_Node::e_Node()
     transmittable = false;
     permeable = false;
     landmark = false;
-    
+
     eRange = 0.0;
 }
 
@@ -18,22 +32,22 @@ e_Node::e_Node(const e_Node & other )
     transmittable = other.transmittable;
     permeable = other.permeable;
     landmark = other.landmark;
-    
+
     moblist = other.moblist;
-    
+
     eLocation = other.eLocation;
-    
+
     eRange = other.eRange;
 }
 
 //destructor
 e_Node::~e_Node()
 {
-    
+
 }
 
 //set coordinate location using coord struct
-void e_Node::setLocation(coord* inLocation)
+void e_Node::setLocation(pair<int,int>* inLocation)
 {
     eLocation.x = inLocation-> x;
     eLocation.y = inLocation-> y;
@@ -46,7 +60,7 @@ void e_Node::setLocation(int xLocation, int yLocation)
     eLocation.y = yLocation;
 }
 
-coord * e_Node::getLocation()
+pair<int,int>* e_Node::getLocation()
 {
     return &eLocation;
 }
@@ -111,13 +125,13 @@ bool e_Node::isLandmark()
 int e_Node::findMNode(int search)
 {
     int l = moblist.getLength();
-    
+
     for(int i=0; i < moblist.getLength(); i++)
     {
         if (moblist[i]->getId() == search)
         return i;
     }
-    
+
     return -1;
 }
 
@@ -128,13 +142,12 @@ e_Node & e_Node::operator= (const e_Node & other)
     transmittable = other.transmittable;
     permeable = other.permeable;
     landmark = other.landmark;
-    
+
     moblist = other.moblist;
-    
+
     eLocation = other.eLocation;
-    
+
     eRange = other.eRange;
-    
+
     return *this;
 }
-

@@ -1,3 +1,17 @@
+/*************
+*
+*	Arban Nichols
+*
+*	06.15.2015
+*
+*	Deven Thiel
+*
+*	12.10.2016
+*
+*	m_Node implementation file
+*
+*************/
+
 #include "m_Node.h"
 
 //default constructor
@@ -20,7 +34,7 @@ m_Node::m_Node(const m_Node & other )
 //manage position
 
 //set mLocation using coord struct
-void m_Node::setLocation(coord* inLocation)
+void m_Node::setLocation(pair<int,int>* inLocation)
 {
     mLocation.x = inLocation-> x;
     mLocation.y = inLocation-> y;
@@ -33,7 +47,7 @@ void m_Node::setLocation(int xLocation, int yLocation)
     mLocation.y = yLocation;
 }
 
-coord * m_Node::getLocation()
+pair<int,int> * m_Node::getLocation()
 {
     return &mLocation;
 }
@@ -41,7 +55,7 @@ coord * m_Node::getLocation()
 //manage goal
 
 //set goal using coord struct
-void m_Node::setGoal(coord* inGoal)
+void m_Node::setGoal(pair<int,int>* inGoal)
 {
     goal.x = inGoal-> x;
     goal.y = inGoal-> y;
@@ -54,7 +68,7 @@ void m_Node::setGoal(int xGoal, int yGoal)
     goal.y = yGoal;
 }
 
-coord * m_Node::getGoal()
+pair<int,int> * m_Node::getGoal()
 {
     return &goal;
 }
@@ -91,6 +105,6 @@ m_Node & m_Node::operator= (const m_Node & other)
     mId = other.mId;
     mRange = other.mRange;
     goal = other.goal;
-    
+
     return *this;
 }

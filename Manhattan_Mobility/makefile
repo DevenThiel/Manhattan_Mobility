@@ -3,25 +3,22 @@
 # <target> : <check for changes>
 #	<how to rebuild>
 
-cabdriver: cabdriver.o dArray.o dispatcher.o e_Node.o m_Node.o map.o
-	g++ -g cabdriver.o dArray.o dispatcher.o e_Node.o m_Node.o map.o -o cabdriver
-	
-dArray.o: dArray.cpp dArray.h dArray.t
-	g++ -g -c dArray.cpp
+cabdriver: cabdriver.o dispatcher.o e_Node.o m_Node.o map.o
+	g++ -g cabdriver.o dispatcher.o e_Node.o m_Node.o map.o -o cabdriver
 
-map.o: map.cpp map.h map.t dArray.cpp dArray.h dArray.t coord.h
+map.o: map.cpp map.h map.t
 	g++ -g -c map.cpp
-	
-m_Node.o: m_Node.cpp m_Node.h coord.h
+
+m_Node.o: m_Node.cpp m_Node.h
 	g++ -g -c m_Node.cpp
 
-e_Node.o: e_Node.cpp e_Node.h m_Node.cpp m_Node.h coord.h
+e_Node.o: e_Node.cpp e_Node.h m_Node.cpp m_Node.h
 	g++ -g -c e_Node.cpp
 
-dispatcher.o: dispatcher.cpp dispatcher.h e_Node.cpp e_Node.h m_Node.cpp m_Node.h map.cpp map.h map.t dArray.cpp dArray.h dArray.t coord.h
+dispatcher.o: dispatcher.cpp dispatcher.h e_Node.cpp e_Node.h m_Node.cpp m_Node.h map.cpp map.h map.t
 	g++ -g -c dispatcher.cpp
 
-cabdriver.o: cabdriver.cpp dispatcher.cpp dispatcher.h dispatcher.cpp dispatcher.h e_Node.cpp e_Node.h m_Node.cpp m_Node.h map.cpp map.h map.t dArray.cpp dArray.h dArray.t coord.h
+cabdriver.o: cabdriver.cpp dispatcher.cpp dispatcher.h dispatcher.cpp dispatcher.h e_Node.cpp e_Node.h m_Node.cpp m_Node.h map.cpp map.h map.t
 	g++ -g -c cabdriver.cpp
 
 clean:

@@ -4,6 +4,10 @@
 *
 *	Manhattan_mobility_model "cab" driver
 *
+*	12/10/16
+*
+* cabdriver implementation file
+*
 *************/
 
 #include <iostream>
@@ -16,29 +20,29 @@ using namespace std;
 
 int stringToInt(string);
 void help();
-void simulate(int,coord,coord,int);
+void simulate(int,pair<int,int>,pair<int,int>,int);
 
 int main (int argc, char *argv[])
 {
 	int time = 0;
-	coord size;
-	size.x = 3;
-	size.y = 3;
-	coord type;
-	type.x = 3;
-	type.y = 3;
+	pair<int,int> size;
+	size.first = 3;
+	size.second = 3;
+	pair<int,int> type;
+	type.first = 3;
+	type.second = 3;
 	int m_Nodes = 1;
-	
+
 	if (argc > 1)
 	{
 		//deal with each argument
 		for (int count = 1; count < argc; count++)
 		{
 			//help menu
-			if (strcmp(argv[count], "-h") == 0 || 
-				strcmp(argv[count], "-H") == 0 || 
-				strcmp(argv[count], "-?") == 0 || 
-				strcmp(argv[count], "--help") == 0 || 
+			if (strcmp(argv[count], "-h") == 0 ||
+				strcmp(argv[count], "-H") == 0 ||
+				strcmp(argv[count], "-?") == 0 ||
+				strcmp(argv[count], "--help") == 0 ||
 				strcmp(argv[count], "--Help") == 0 )
 			{
 				help();
@@ -63,7 +67,7 @@ int main (int argc, char *argv[])
 				{
 					count ++;
 					string temp = argv[count];
-					
+
 					//check if valid input
 					bool valid = true;
 					int comma= -1;
@@ -78,19 +82,19 @@ int main (int argc, char *argv[])
 							}
 						}
 					}
-					
+
 					if (valid && comma >= 1 && comma < temp.length())
-					{	
+					{
 						//x
-						size.x = stringToInt(temp.substr(0,comma - 1));
+						size.first = stringToInt(temp.substr(0,comma - 1));
 						//y
-						size.y = stringToInt(temp.substr(comma +1, temp.length()));
+						size.second = stringToInt(temp.substr(comma +1, temp.length()));
 					}
 					else
 					{
 						cout << "Invalid string for size option.\n";
 					}
-						
+
 				}
 				else
 				{
@@ -104,7 +108,7 @@ int main (int argc, char *argv[])
 				{
 					count ++;
 					string temp = argv[count];
-					
+
 					//check if valid input
 					bool valid = true;
 					int comma= -1;
@@ -119,19 +123,19 @@ int main (int argc, char *argv[])
 							}
 						}
 					}
-					
+
 					if (valid && comma >= 1 && comma < temp.length())
-					{	
+					{
 						//x
-						type.x = stringToInt(temp.substr(0,comma - 1));
+						type.first = stringToInt(temp.substr(0,comma - 1));
 						//y
-						type.y = stringToInt(temp.substr(comma +1, temp.length()));
+						type.second = stringToInt(temp.substr(comma +1, temp.length()));
 					}
 					else
 					{
 						cout << "Invalid string for type option.\n";
 					}
-						
+
 				}
 				else
 				{
@@ -167,15 +171,15 @@ int main (int argc, char *argv[])
 int stringToInt(string str)
 {
 	int result = 0;
-	
+
 	for (int i = 0; i < str.length(); i++)
 	{
 		result *= 10;
 		result += (int)(str[i] - '0');
 	}
-	
+
 	return result;
-}	
+}
 
 void help()
 {
@@ -183,16 +187,16 @@ void help()
 	cout << "\t-H\t\t\t\tHelp menu\n";
 	cout << "\t-?\n";
 	cout << "\t--Help\n";
-	cout << "\t-t\t\t\t\ttime <cycles>\n";	
+	cout << "\t-t\t\t\t\ttime <cycles>\n";
 	cout << "\t-Ms\t\t\t\tmap size <x,y>\n";
 	cout << "\t-Mt\t\t\t\tmap type <streets x, streets y>\n";
 	cout << "\t-m\t\t\t\tmobile nodes <nodes>\n";
 }
 
-void simulate(int t,coord ms,coord mt,int n)
+void simulate(int t,pair<int,int> ms,pair<int,int> mt,int n)
 {
 	Dispatcher theSim;
-	
+
 	if (t == 0)
 	{
 		theSim.runSim(ms,mt,n);

@@ -2,7 +2,7 @@
 *
 *	Deven Thiel
 *
-*	07.14.2015
+*	12.10.2016
 *
 *	dispatcher implementation for manhattan mobility model
 *
@@ -35,7 +35,7 @@ void Dispatcher::pathfinder (m_Node * mobnode)
 {
 	e_Node * e, * n, * s, * w, * startpos;
 	bool emove, nmove, smove, wmove;
-	coord * start, * current, * finish;
+	pair<int,int> * start, * current, * finish;
 
 	start = mobnode->getLocation();
 	finish = mobnode->getGoal();
@@ -45,57 +45,57 @@ void Dispatcher::pathfinder (m_Node * mobnode)
 
 	while (current != finish)
 	{
-		/*obtain Moore neighborhood using 4 cardinal points along with 
+		/*obtain Moore neighborhood using 4 cardinal points along with
 		the traversability of those points*/
-		n = getEnode(current->x, current->y - 1);
+		n = getEnode(current->first, current->second - 1);
 		nmove = ckTraversable(n);
 
-		w = getEnode(current->x - 1, current->y);
+		w = getEnode(current->first - 1, current->second);
 		wmove = ckTraversable(w);
-		
-		s = getEnode(current->x, current->y - 1);
+
+		s = getEnode(current->first, current->second - 1);
 		smove = ckTraversable(s);
-		
-		e = getEnode(current->x + 1, current->y);
+
+		e = getEnode(current->first + 1, current->second);
 		emove = ckTraversable(e);
-		
+
 		/*Determine the next step by aligning the x,y coordinates of current
-		 with the coordinates of goal. At the establishment of a next step 
+		 with the coordinates of goal. At the establishment of a next step
 		 add that coordinate to the path of the function parameter */
-		if (current->x != finish->x || current->y != finish->y)
+		if (current->first != finish->first || current->second != finish->second)
 		{
-			if (current->x != finish->x)
+			if (current->first != finish->first)
 			{
 				if (emove || wmove)
 				{
-					if (current->x > finish->x)
-						current->x = current->x - 1;
-					else if (current->x < finish->x)
-						current->x = current->x + 1;
+					if (current->first > finish->first)
+						current->first = current->first - 1;
+					else if (current->first < finish->first)
+						current->first = current->first + 1;
 				}
-				
+
 			}
-			else //(current->y != finish->y)
+			else //(current->second != finish->second)
 			{
 				if (nmove || smove)
 				{
-					if (current->y > finish->y)
-						current->y = current->y - 1;
-					else if (current->y < finish->y)
-						current->y = current->y + 1;
+					if (current->second > finish->second)
+						current->second = current->second - 1;
+					else if (current->second < finish->second)
+						current->second = current->second + 1;
 				}
-			}		
-		
+			}
+
 			mobnode->path.enqueue(current);
 		}
 	}
-	
+
 }
-	
+
 //trip planner
-coord * Dispatcher::tripPlanner ()
+pair<int,int> * Dispatcher::tripPlanner ()
 {
-	coord * goal;
+	pair<int,int> * goal;
 	srand (time(NULL));
 	e_Node * destination;
 	int l = traversableENodes.getLength();
@@ -104,14 +104,14 @@ coord * Dispatcher::tripPlanner ()
 	goal = destination->getLocation();
 	return goal;
 }
-	
+
 //move
 void Dispatcher::move (m_Node * mobnode)
 {
 	e_Node * tempE;
 	m_Node * tempM;
-	
-	
+
+
 	//if no path
 	if (mobnode->path.getLength() == 0)
 	{
@@ -120,7 +120,7 @@ void Dispatcher::move (m_Node * mobnode)
 		//path finder
 		pathfinder(mobnode);
 	}
-	
+
 	//get enode holding mnode
 	tempE = getEnode(mobnode->getLocation());
 	//remove mnode from enode
@@ -136,41 +136,41 @@ void Dispatcher::move (m_Node * mobnode)
 }
 
 //map builder
-void Dispatcher::buildMap (coord size, coord type)
+void Dispatcher::buildMap (pair<int,int> size, pair<int,int> type)
 {
 	e_Node * theENode;
 	e_Node * tempE;
 	//grow map
-	for (int x = 0; x < size.x; x++)
+	for (int x = 0; x < size.first; x++)
 	{
 		theMap.addMapCol();
 	}
-	
-	for (int y = 0; y < size.y; y++)
+
+	for (int y = 0; y < size.second; y++)
 	{
 		theMap.addMapRow();
 	}
-	
+
 	//consider type defined
-	int tx = (int)(size.x / type.x);
-	int ty = (int)(size.y / type.y);
-	
-	for (int x = 0; x < size.x; x++)
+	int tx = (int)(size.first / type.first);
+	int ty = (int)(size.second / type.second);
+
+	for (int x = 0; x < size.first; x++)
 	{
-		for (int y = 0; y < size.y; y++)
+		for (int y = 0; y < size.second; y++)
 		{
 			//add to e_Node list
 			theENode = new e_Node;
 			cout << "node: " << theENode << endl;
 			theENode->setPermeable(false);
 			theENode->setTransmittable(false);
-			
+
 			if (x % tx == 0 || y % ty == 0)
 			{
 				//traversible
-				
+
 				theENode->setTraversable(true);
-				
+
 				//add traversable list
 				traversableENodes.addElement();
 				tempE = traversableENodes[traversableENodes.getLength()];
@@ -180,12 +180,12 @@ void Dispatcher::buildMap (coord size, coord type)
 			{
 				theENode->setTraversable(false);
 			}
-			
+
 			//add to eNodes
 			eNodes.addElement();
 			tempE = eNodes[eNodes.getLength()];
 			tempE = theENode;
-			
+
 			//add to map
 			theMap.setNode(x,y,theENode);
 			if (theMap.getNode(x,y) == NULL)
@@ -195,41 +195,41 @@ void Dispatcher::buildMap (coord size, coord type)
 		}
 	}
 }
-	
+
 //m_Node builder
 void Dispatcher::buildm_Node (int num)
 {
 	m_Node * anMNode;
 	m_Node * tempM;
-	
+
 	for (int z = 0; z < num; z++)
 	{
 		anMNode = new m_Node;
 		anMNode->setLocation(tripPlanner());
 		anMNode->setId(z);
-		
+
 		mNodes.addElement();
 		tempM = mNodes[mNodes.getLength()];
 		tempM = anMNode;
 	}
 }
-	
+
 //display
 void Dispatcher::displayMap ()
 {
-	coord * size = theMap.getMapSize();
+	pair<int,int> * size = theMap.getMapSize();
 	e_Node * theNode;
-	
-	for (int j = (size->y - 1); j >= 0; j--)
+
+	for (int j = (size->second - 1); j >= 0; j--)
 	{
 		cout << "+";
-		for (int i = 0; i < size->x; i++)
+		for (int i = 0; i < size->first; i++)
 		{
 			cout << "-+";
 		}
 		cout << endl;
 		cout << "|";
-		for (int i = 0; i < size->x; i++)
+		for (int i = 0; i < size->first; i++)
 		{
 			theNode = theMap.getNode(i,j);
 			if (theNode == NULL)
@@ -249,28 +249,28 @@ void Dispatcher::displayMap ()
 		cout << endl;
 	}
 }
-	
+
 //data file
 void Dispatcher::printData ()
 {
 	m_Node * theNode;
-	
+
 	*out << "t:" << currentTime << endl;
-	
+
 	for (int i = 0; i < mNodes.getLength(); i++)
 	{
 		theNode = mNodes[i];
-		coord * location = theNode->getLocation();
-		*out << theNode->getId() << ":" << location->x << "," << location->y << endl;
+		pair<int,int> * location = theNode->getLocation();
+		*out << theNode->getId() << ":" << location->first << "," << location->second << endl;
 	}
 }
 
 //sim setup
-void Dispatcher::simSetup (coord size, coord type, int nodes)
+void Dispatcher::simSetup (pair<int,int> size, pair<int,int> type, int nodes)
 {
 	buildMap(size, type);
 	buildm_Node(nodes);
-	
+
 	/*
 	//build traversable nodes list
 	for (int x = 0; x < eNodes.getLength(); x++)
@@ -283,43 +283,43 @@ void Dispatcher::simSetup (coord size, coord type, int nodes)
 	}
 	*/
 }
-	
+
 //run
-void Dispatcher::runSim (coord size, coord type, int nodes)
+void Dispatcher::runSim (pair<int,int> size, pair<int,int> type, int nodes)
 {
 	simSetup(size, type, nodes);
 	setupFile();
-		
-	char go;	
+
+	char go;
 	do
 	{
 		for (int i = 0; i < mNodes.getLength(); i++)
 		{
 			move(mNodes[i]);
 		}
-		
+
 		displayMap();
 		printData();
-				
+
 		cout << "Would you like to continue (y/n) ?:";
-		
+
 		cin >> go;
 	}while (go == 'y' || go == 'Y');
 }
-	
+
 //run for
-void Dispatcher::runSimFor (int time, coord size, coord type, int nodes)
+void Dispatcher::runSimFor (int time, pair<int,int> size, pair<int,int> type, int nodes)
 {
 	simSetup(size, type, nodes);
 	setupFile();
-	
+
 	while (currentTime <= time)
 	{
 		for (int i = 0; i < mNodes.getLength(); i++)
 		{
 			move(mNodes[i]);
 		}
-		
+
 		displayMap();
 		printData();
 	}
@@ -340,11 +340,11 @@ namespace patch
 void Dispatcher::setupFile ()
 {
 	bool newName = true;
-	
+
 	int counter = 0;
-	
+
 	string name;
-	
+
 	while (newName)
 	{
 		name = "simData";
@@ -353,32 +353,32 @@ void Dispatcher::setupFile ()
 			name.append(patch::to_string(counter));
 		}
 		name.append(".dat");
-		
-    	if (FILE *file = fopen(name.c_str(), "r")) 
+
+    	if (FILE *file = fopen(name.c_str(), "r"))
 		{
         	fclose(file);
         	newName = false;
 		}
-		else 
+		else
 		{
         	newName = true;
 			counter ++;
     	}
 	}
-	
-	setupFile (name);		
+
+	setupFile (name);
 }
-	
+
 //fileSetup + name
 void Dispatcher::setupFile (string fileName)
 {
 	out = new ofstream;
-	
+
 	out->open(fileName.c_str());
 }
 
 //get e_Node using coord variable
-e_Node * Dispatcher::getEnode (coord * inCoord)
+e_Node * Dispatcher::getEnode (pair<int,int> * inCoord)
 {
 	int l = eNodes.getLength();
 	e_Node * theNode;
@@ -402,12 +402,12 @@ e_Node  * Dispatcher::getEnode (int x, int y)
 	for (int i = 0; i <= l; i++)
 	{
 		theNode = eNodes[i];
-		coord * location = theNode->getLocation();
-		if (location->x == x && location->y == y)
+		pair<int,int> * location = theNode->getLocation();
+		if (location->first == x && location->second == y)
 		{
 			return eNodes[i];
 		}
-		else 
+		else
 		return NULL;
 	}
 }
