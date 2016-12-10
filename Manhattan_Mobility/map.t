@@ -24,7 +24,7 @@ Map<T>::Map (int x, int y)
 {
 	mapSize.x = x;
 	mapSize.y = y;
-	
+
 	//add each column
 	for (int i = 0; i < x; i++)
 	{
@@ -63,12 +63,12 @@ template<class T>
 coord * Map<T>::getMapSize ()
 {
 	coord * temp;
-	
+
 	temp = & mapSize;
-	
+
 	return temp;
 }
-		
+
 template <class T>
 void Map<T>::addMapRow ()
 {
@@ -76,7 +76,7 @@ void Map<T>::addMapRow ()
 	{
 		map[i]->addElement();
 	}
-	
+
 	mapSize.y ++;
 }
 
@@ -84,7 +84,7 @@ template <class T>
 void Map<T>::addMapCol()
 {
 	map.addElement();
-	
+
 	mapSize.x ++;
 	for (int j = 0; j < mapSize.y; j ++)
 	{
@@ -99,10 +99,10 @@ void Map<T>::delMapRow()
 	{
 		map[i]->deleteElement();
 	}
-	
+
 	mapSize.y --;
 }
-	
+
 template <class T>
 void Map<T>::delMapCol()
 {
@@ -110,53 +110,53 @@ void Map<T>::delMapCol()
 	{
 		map[mapSize.x - 1]->deleteElement();
 	}
-	
+
 	map.deleteElement();
-	
+
 	mapSize.x --;
 }
-	
+
 template <class T>
 void Map<T>::shiftMapUp()
 {
 	for (int i = 0; i < mapSize.x; i ++)
 	{
-		//delete anything in top row not null
-		if (map[i][mapSize.y - 1] != NULL)
+		//delete anything in top row not 0
+		if (map[i][mapSize.y - 1] != (T*)0)
 		{
 			delete map[i][mapSize.y - 1];
 		}
-		
+
 		//move everything up a row
 		for (int j = (mapSize.y - 1); j > 0; j--)
 		{
 			map[i][j] = map[i][j - 1];
 		}
-		
-		//NULL the bottom row
-		map[i][0] = NULL;
+
+		//0 the bottom row
+		map[i][0] = (T*)0;
 	}
-}		
-			
+}
+
 template <class T>
 void Map<T>::shiftMapDown()
 {
 	for (int i = 0; i < mapSize.x; i ++)
 	{
-		//delete anything in bottom row not null
-		if (map[i][0] != NULL)
+		//delete anything in bottom row not 0
+		if (map[i][0] != (T*)0)
 		{
 			delete map[i][0];
 		}
-		
+
 		//move everything up a row
 		for (int j = 0; j < (mapSize.y - 1); j++)
 		{
 			map[i][j] = map[i][j + 1];
 		}
-		
-		//NULL the top row
-		map[i][mapSize.y - 1] = NULL;
+
+		//0 the top row
+		map[i][mapSize.y - 1] = (T*)0;
 	}
 }
 
@@ -165,20 +165,20 @@ void Map<T>::shiftMapLeft()
 {
 	for (int j = 0; j < mapSize.y; j ++)
 	{
-		//delete anything in left collumn not null
-		if (map[0][j] != NULL)
+		//delete anything in left collumn not 0
+		if (map[0][j] != (T*)0)
 		{
 			delete map[0][j];
 		}
-		
+
 		//move everything left a collumn
 		for (int i = 0; i < (mapSize.x - 1); i++)
 		{
 			map[i][j] = map[i + 1][j];
 		}
-		
-		//NULL the right collumn
-		map[mapSize.x - 1][j] = NULL;
+
+		//0 the right collumn
+		map[mapSize.x - 1][j] = (T*)0;
 	}
 }
 
@@ -187,28 +187,27 @@ void Map<T>::shiftMapRight()
 {
 	for (int j = 0; j < mapSize.y; j ++)
 	{
-		//delete anything in right collumn not null
-		if (map[mapSize.x - 1][j] != NULL)
+		//delete anything in right collumn not 0
+		if (map[mapSize.x - 1][j] != (T*)0)
 		{
 			delete map[mapSize.x - 1][j];
 		}
-		
+
 		//move everything right a collumn
 		for (int i = (mapSize.x - 1); i > 0; i--)
 		{
 			map[i][j] = map[i - 1][j];
 		}
-		
-		//NULL the left collumn
-		map[0][j] = NULL;
+
+		//0 the left collumn
+		map[0][j] = (T*)0;
 	}
 }
-	
+
 template <class T>
 void Map<T>::setNode(int x, int y, T * theT)
 {
-	//map[x][y] = theT;
-	map.getElement(x)->getElement(y) = theT;
+	getNode(x,y) = theT;
 }
 
 template <class T>
@@ -222,11 +221,12 @@ T * Map<T>::getNode (int x, int y)
 {
 	if (x < mapSize.x && y < mapSize.y)
 	{
-		return map[x][y];
+		//return map[x][y];
+		return getNode(x,y);
 	}
 	else
 	{
-		return (T)NULL;
+		return (T*)0;
 	}
 }
 
@@ -235,7 +235,7 @@ T * Map<T>::getNode (coord * location)
 {
 	return getNode(location->x, location->y);
 }
-	
+
 template <class T>
 void Map<T>::setMapSize (int x, int y)
 {
