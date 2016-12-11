@@ -24,6 +24,8 @@ void simulate(int,pair<int,int>,pair<int,int>,int);
 
 int main (int argc, char *argv[])
 {
+
+	//default program values, can be changed via parameters, see --help
 	int time = 0;
 	pair<int,int> size;
 	size.first = 3;

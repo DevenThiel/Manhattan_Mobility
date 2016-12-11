@@ -49,15 +49,15 @@ e_Node::~e_Node()
 //set coordinate location using coord struct
 void e_Node::setLocation(pair<int,int>* inLocation)
 {
-    eLocation.x = inLocation-> x;
-    eLocation.y = inLocation-> y;
+    eLocation.first = inLocation-> first;
+    eLocation.second = inLocation-> second;
 }
 
 //set coordinate location using parameters
 void e_Node::setLocation(int xLocation, int yLocation)
 {
-    eLocation.x = xLocation;
-    eLocation.y = yLocation;
+    eLocation.first = xLocation;
+    eLocation.second = yLocation;
 }
 
 pair<int,int>* e_Node::getLocation()
@@ -124,9 +124,9 @@ bool e_Node::isLandmark()
 //find m_Node in moblist
 int e_Node::findMNode(int search)
 {
-    int l = moblist.getLength();
+    int l = moblist.size();
 
-    for(int i=0; i < moblist.getLength(); i++)
+    for(int i=0; i < moblist.size(); i++)
     {
         if (moblist[i]->getId() == search)
         return i;

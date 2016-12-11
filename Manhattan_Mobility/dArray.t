@@ -1,7 +1,7 @@
 /************
- * 
+ *
  * Deven Thiel
- * 
+ *
  * 07.08.2015
  *
  * v1.0 - addition of operator overloading
@@ -10,7 +10,7 @@
  *
  * Template implimentation file to impliment templated portions of a
  * 	class providing functionality for a dynamically sized array.
- * 
+ *
  ************/
 
 //default constructor
@@ -48,7 +48,7 @@ template <class T>
 DArray<T>::DArray (const DArray<T> & other)
 {
 	length = other.length;
-	
+
 	if (length == 1)
 	{
 		delete dataP;
@@ -57,11 +57,11 @@ DArray<T>::DArray (const DArray<T> & other)
 	{
 		delete[] dataP;
 	}
-	
+
 	//delete[] dataP;
-	
+
 	dataP = new T[length];
-	
+
 	for (int i = 0; i < length; i++)
 	{
 		dataP[i] = other.dataP[i];
@@ -94,10 +94,10 @@ void DArray<T>::deleteElement (int inTarget)
 			tempP[i - 1] = dataP[i];
 		}
 	}
-	
+
 	//delete old array
 	delete[] dataP;
-		
+
 	//move pointer
 	dataP = tempP;
 }
@@ -107,30 +107,30 @@ template <class T>
 void DArray<T>::addElement ()
 {
 	length++;
-	
+	/* corrupt data?
 	T nerl[1] = {};
 	T & n0ll = nerl[0];
-	
+	*/
 	//create new array of correct size
 	T *tempP;
-	
+
 	tempP = new T[length];
-	
-	//zero new array 
+
+	//zero new array
 	for (int i = 0; i < length; i++)
 	{
 		tempP[i] = n0ll;
 	}
-	
+
 	//copy current array
 	for (int i = 0; i < (length - 1); i++)
 	{
 		tempP[i] = dataP[i];
 	}
-	
+
 	//delete (free) old memory
 	delete[] dataP;
-	
+
 	//move pointer
 	dataP = tempP;
 }
@@ -161,16 +161,16 @@ template <class T>
 DArray<T>& DArray<T>::operator= (const DArray<T> & other)
 {
 	length = other.length;
-	
+
 	delete[] dataP;
-	
+
 	dataP = new T[length];
-	
+
 	for (int i = 0; i < length; i++)
 	{
 		dataP[i] = other.dataP[i];
 	}
-	
+
 	return *this;
 }
 
@@ -181,7 +181,7 @@ template <class T>
 void DArray<T>::push (T item)
 {
 	addElement();
-	
+
 	dataP[length - 1] = item;
 }
 
@@ -190,18 +190,18 @@ template <class T>
 T DArray<T>::pop ()
 {
 	T temp = dataP[length - 1];
-	
+
 	deleteElement();
-	
+
 	return temp;
 }
-	
+
 //stack object push
 template <class T>
 void DArray<T>::pushO (T* itemPtr)
 {
 	addElement();
-	
+
 	dataP[length - 1] = *itemPtr;
 }
 
@@ -210,20 +210,20 @@ template <class T>
 T * DArray<T>::popO ()
 {
 	T * temp = &(dataP[length - 1]);
-	
+
 	deleteElement();
-	
+
 	return temp;
 }
 
 //queue functionality
-	
+
 //queue add
 template <class T>
 void DArray<T>::enqueue (T item)
 {
 	addElement();
-	
+
 	dataP[length - 1] = item;
 }
 
@@ -232,18 +232,18 @@ template <class T>
 T DArray<T>::dequeue ()
 {
 	T temp = dataP[0];
-	
+
 	deleteElement(0);
-	
+
 	return temp;
 }
-	
+
 //queue object add
 template <class T>
 void DArray<T>::enqueueO (T* itemPtr)
 {
 	addElement();
-	
+
 	dataP[length - 1] = *itemPtr;
 }
 
@@ -252,10 +252,10 @@ template <class T>
 T* DArray<T>::dequeueO ()
 {
 	T * temp = new T;
-	
+
 	*temp = dataP[0];
-	
+
 	deleteElement(0);
-	
+
 	return temp;
 }

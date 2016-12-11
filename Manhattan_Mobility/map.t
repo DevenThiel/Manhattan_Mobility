@@ -47,6 +47,15 @@ Map<T>::Map (pair<int,int> * size)
 template <class T>
 Map<T>::~Map()
 {
+	for (int i = map.size() - 1; i >= 0; i--)
+	{
+		map[i]->clear();
+	}
+
+	map.clear();
+
+	//no longer needed, was from DArray
+	/*
 	//deallocate all the memory assosiated with the map
 	for (int i = (mapSize.first - 1); i >= 0; i--)
 	{
@@ -56,6 +65,7 @@ Map<T>::~Map()
 		}
 		map.deleteElement(i);
 	}
+	*/
 }
 
 //maps
@@ -74,7 +84,7 @@ void Map<T>::addMapRow ()
 {
 	for (int i = 0; i < mapSize.first; i++)
 	{
-		map[i]->addElement();
+		map[i]->push_back((T*)0);
 	}
 
 	mapSize.second ++;
@@ -83,6 +93,17 @@ void Map<T>::addMapRow ()
 template <class T>
 void Map<T>::addMapCol()
 {
+	vector<T*> tempvec;
+	map.push_back(&tempvec);
+
+	mapSize.first++;
+
+	for (int i = 0; i < mapSize.second; i++)
+	{
+		map[mapSize.first - 1]->push_back((T*)0);
+	}
+
+	/*
 	map.addElement();
 
 	mapSize.first ++;
@@ -90,6 +111,7 @@ void Map<T>::addMapCol()
 	{
 		map[mapSize.first - 1]->addElement();
 	}
+	*/
 }
 
 template <class T>
@@ -207,7 +229,7 @@ void Map<T>::shiftMapRight()
 template <class T>
 void Map<T>::setNode(int x, int y, T * theT)
 {
-	getNode(x,y) = theT;
+	map.at(x)->at(y) = theT;
 }
 
 template <class T>
@@ -221,8 +243,7 @@ T * Map<T>::getNode (int x, int y)
 {
 	if (x < mapSize.first && y < mapSize.second)
 	{
-		//return map[x][y];
-		return getNode(x,y);
+		return map.at(x)->at(y);
 	}
 	else
 	{

@@ -17,8 +17,8 @@
 //default constructor
 m_Node::m_Node()
 {
-    mLocation.x = -1;
-    mLocation.y = -1;
+    mLocation.first = -1;
+    mLocation.second = -1;
     mRange = 0.0;
 }
 
@@ -36,15 +36,15 @@ m_Node::m_Node(const m_Node & other )
 //set mLocation using coord struct
 void m_Node::setLocation(pair<int,int>* inLocation)
 {
-    mLocation.x = inLocation-> x;
-    mLocation.y = inLocation-> y;
+    mLocation.first = inLocation-> first;
+    mLocation.second = inLocation-> second;
 }
 
 //set mLocation using parameters
 void m_Node::setLocation(int xLocation, int yLocation)
 {
-    mLocation.x = xLocation;
-    mLocation.y = yLocation;
+    mLocation.first = xLocation;
+    mLocation.second = yLocation;
 }
 
 pair<int,int> * m_Node::getLocation()
@@ -57,15 +57,15 @@ pair<int,int> * m_Node::getLocation()
 //set goal using coord struct
 void m_Node::setGoal(pair<int,int>* inGoal)
 {
-    goal.x = inGoal-> x;
-    goal.y = inGoal-> y;
+    goal.first = inGoal-> first;
+    goal.second = inGoal-> second;
 }
 
 //set goal using parameters
 void m_Node::setGoal(int xGoal, int yGoal)
 {
-    goal.x = xGoal;
-    goal.y = yGoal;
+    goal.first = xGoal;
+    goal.second = yGoal;
 }
 
 pair<int,int> * m_Node::getGoal()

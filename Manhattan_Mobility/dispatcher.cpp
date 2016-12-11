@@ -24,7 +24,7 @@ Dispatcher::~Dispatcher()
 //inline function for pointer to NULL check
 inline bool ckTraversable (e_Node * inNode)
 {
-	if (inNode == NULL)
+	if (inNode == 0)
 	return false;
 	else
 	return inNode->isTraversable();
@@ -86,7 +86,7 @@ void Dispatcher::pathfinder (m_Node * mobnode)
 				}
 			}
 
-			mobnode->path.enqueue(current);
+			mobnode->path.push_back(current);
 		}
 	}
 
@@ -98,7 +98,7 @@ pair<int,int> * Dispatcher::tripPlanner ()
 	pair<int,int> * goal;
 	srand (time(NULL));
 	e_Node * destination;
-	int l = traversableENodes.getLength();
+	int l = traversableENodes.size();
 	int r = rand() % l;
 	destination = traversableENodes[r];
 	goal = destination->getLocation();
@@ -113,7 +113,7 @@ void Dispatcher::move (m_Node * mobnode)
 
 
 	//if no path
-	if (mobnode->path.getLength() == 0)
+	if (mobnode->path.size() == 0)
 	{
 		//trip planner
 		mobnode->setGoal(tripPlanner());
@@ -124,15 +124,21 @@ void Dispatcher::move (m_Node * mobnode)
 	//get enode holding mnode
 	tempE = getEnode(mobnode->getLocation());
 	//remove mnode from enode
-	tempE->moblist.deleteElement(tempE->findMNode(mobnode->getId()));
+	tempE->moblist.erase(tempE->moblist.begin() + tempE->findMNode(mobnode->getId()));
 	//update m_node location
-	mobnode->setLocation(mobnode->path.pop());
+	//vector pop, should this be changed to a queue?
+	mobnode->setLocation(mobnode->path.front());
+	mobnode->path.erase(mobnode->path.begin());
 	//find enode to hold mnode
 	tempE = getEnode(mobnode->getLocation());
 	//add mnode to enode
+	/*
 	tempE->moblist.addElement();
-	tempM = tempE->moblist[tempE->moblist.getLength()];
+	tempM = tempE->moblist[tempE->moblist.size()];
 	tempM = mobnode;
+	*/
+	//just adding element to the end of the list of new enode
+	tempE->moblist.push_back(mobnode);
 }
 
 //map builder
@@ -172,9 +178,11 @@ void Dispatcher::buildMap (pair<int,int> size, pair<int,int> type)
 				theENode->setTraversable(true);
 
 				//add traversable list
+				/*
 				traversableENodes.addElement();
-				tempE = traversableENodes[traversableENodes.getLength()];
-				tempE = theENode;
+				tempE = traversableENodes[traversableENodes.size()];
+				tempE = theENode;*/
+				traversableENodes.push_back(theENode);
 			}
 			else
 			{
@@ -182,9 +190,12 @@ void Dispatcher::buildMap (pair<int,int> size, pair<int,int> type)
 			}
 
 			//add to eNodes
+			/*
 			eNodes.addElement();
-			tempE = eNodes[eNodes.getLength()];
+			tempE = eNodes[eNodes.size()];
 			tempE = theENode;
+			*/
+			eNodes.push_back(theENode);
 
 			//add to map
 			theMap.setNode(x,y,theENode);
@@ -208,9 +219,12 @@ void Dispatcher::buildm_Node (int num)
 		anMNode->setLocation(tripPlanner());
 		anMNode->setId(z);
 
+		/*
 		mNodes.addElement();
-		tempM = mNodes[mNodes.getLength()];
+		tempM = mNodes[mNodes.size()];
 		tempM = anMNode;
+		*/
+		mNodes.push_back(anMNode);
 	}
 }
 
@@ -257,7 +271,7 @@ void Dispatcher::printData ()
 
 	*out << "t:" << currentTime << endl;
 
-	for (int i = 0; i < mNodes.getLength(); i++)
+	for (int i = 0; i < mNodes.size(); i++)
 	{
 		theNode = mNodes[i];
 		pair<int,int> * location = theNode->getLocation();
@@ -273,12 +287,12 @@ void Dispatcher::simSetup (pair<int,int> size, pair<int,int> type, int nodes)
 
 	/*
 	//build traversable nodes list
-	for (int x = 0; x < eNodes.getLength(); x++)
+	for (int x = 0; x < eNodes.size(); x++)
 	{
 		if (eNodes[x]->isTraversable())
 		{
 			traversableENodes.addElement();
-			traversableENodes[traversableEnodes.getLength()] = eNodes[x];
+			traversableENodes[traversableEnodes.size()] = eNodes[x];
 		}
 	}
 	*/
@@ -293,7 +307,7 @@ void Dispatcher::runSim (pair<int,int> size, pair<int,int> type, int nodes)
 	char go;
 	do
 	{
-		for (int i = 0; i < mNodes.getLength(); i++)
+		for (int i = 0; i < mNodes.size(); i++)
 		{
 			move(mNodes[i]);
 		}
@@ -315,7 +329,7 @@ void Dispatcher::runSimFor (int time, pair<int,int> size, pair<int,int> type, in
 
 	while (currentTime <= time)
 	{
-		for (int i = 0; i < mNodes.getLength(); i++)
+		for (int i = 0; i < mNodes.size(); i++)
 		{
 			move(mNodes[i]);
 		}
@@ -380,7 +394,7 @@ void Dispatcher::setupFile (string fileName)
 //get e_Node using coord variable
 e_Node * Dispatcher::getEnode (pair<int,int> * inCoord)
 {
-	int l = eNodes.getLength();
+	int l = eNodes.size();
 	e_Node * theNode;
 	for (int i = 0; i <= l; i++)
 	{
@@ -397,7 +411,7 @@ e_Node * Dispatcher::getEnode (pair<int,int> * inCoord)
 //get e_Node using integer input
 e_Node  * Dispatcher::getEnode (int x, int y)
 {
-	int l = eNodes.getLength();
+	int l = eNodes.size();
 	e_Node * theNode;
 	for (int i = 0; i <= l; i++)
 	{

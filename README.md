@@ -10,3 +10,9 @@ makefile updated
 *.t updated
 
 most of transition in complete. dispatcher.cpp still needs functionality updates from build in features of DArray to work with std::vector
+
+Transition complete.
+
+12/11/16
+
+debugging seg fault in driver - not running as far as it was with old DArray/Coord, likely still something that needs to be changed is causing this.
