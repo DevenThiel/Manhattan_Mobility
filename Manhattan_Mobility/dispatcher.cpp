@@ -199,7 +199,7 @@ void Dispatcher::buildMap (pair<int,int> size, pair<int,int> type)
 
 			//add to map
 			theMap.setNode(x,y,theENode);
-			if (theMap.getNode(x,y) == NULL)
+			if (theMap.getNode(x,y) == nullptr)
 			{
 				cout << "null e-node at" << x << "," << y << endl;
 			}
@@ -309,7 +309,7 @@ void Dispatcher::runSim (pair<int,int> size, pair<int,int> type, int nodes)
 	{
 		for (int i = 0; i < mNodes.size(); i++)
 		{
-			move(mNodes[i]);
+			//move(mNodes[i]);
 		}
 
 		displayMap();
@@ -368,19 +368,23 @@ void Dispatcher::setupFile ()
 		}
 		name.append(".dat");
 
-    	if (FILE *file = fopen(name.c_str(), "r"))
+		//test if file exits
+    if (FILE *file = fopen(name.c_str(), "r"))
 		{
-        	fclose(file);
-        	newName = false;
+			//if file exists, close it, loop and iterate.
+			fclose(file);
+			newName = true;
+			counter++;
 		}
 		else
 		{
-        	newName = true;
-			counter ++;
-    	}
+			newName = false;
+		}
+		cout <<"name:" << name << "counter:" << counter << endl;
 	}
 
-	setupFile (name);
+	out = new ofstream();
+	out->open(name);
 }
 
 //fileSetup + name

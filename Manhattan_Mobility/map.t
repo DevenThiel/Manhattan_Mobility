@@ -82,36 +82,31 @@ pair<int,int> * Map<T>::getMapSize ()
 template <class T>
 void Map<T>::addMapRow ()
 {
+	//increase mapSize (row)
+	mapSize.second ++;
+
+	//increase vector size of each column
 	for (int i = 0; i < mapSize.first; i++)
 	{
-		map[i]->push_back((T*)0);
+		map[i]->push_back(new T());
 	}
-
-	mapSize.second ++;
 }
 
 template <class T>
 void Map<T>::addMapCol()
 {
-	vector<T*> tempvec;
-	map.push_back(&tempvec);
+	//increase mapSize (column)
+	mapSize.first ++;
 
-	mapSize.first++;
+	//add the new vector via pointer
+	vector<T*> * temp = new vector<T*>();
+	map.push_back(temp);
 
+	//fill new column with T(); to row size
 	for (int i = 0; i < mapSize.second; i++)
 	{
-		map[mapSize.first - 1]->push_back((T*)0);
+		map[mapSize.first - 1]->push_back(new T());
 	}
-
-	/*
-	map.addElement();
-
-	mapSize.first ++;
-	for (int j = 0; j < mapSize.second; j ++)
-	{
-		map[mapSize.first - 1]->addElement();
-	}
-	*/
 }
 
 template <class T>
@@ -241,13 +236,14 @@ void Map<T>::setNode(pair<int,int> * location, T * theT)
 template <class T>
 T * Map<T>::getNode (int x, int y)
 {
-	if (x < mapSize.first && y < mapSize.second)
+	if (x < mapSize.first && y < mapSize.second && x >= 0 && y >= 0)
 	{
 		return map.at(x)->at(y);
 	}
 	else
 	{
-		return (T*)0;
+		return nullptr;
+		//return (T*)0;
 	}
 }
 
