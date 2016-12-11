@@ -6,7 +6,7 @@
 *
 *	Deven Thiel
 *
-*	12.10.2016
+*	12.11.2016
 *
 *	e_Node class implementation file
 *
