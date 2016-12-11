@@ -10,6 +10,8 @@
 
 #include "dispatcher.h"
 
+#include <cmath>
+
 Dispatcher::Dispatcher()
 {
 	currentTime = 0;
@@ -33,63 +35,196 @@ inline bool ckTraversable (e_Node * inNode)
 //pathfinder
 void Dispatcher::pathfinder (m_Node * mobnode)
 {
-	e_Node * e, * n, * s, * w, * startpos;
-	bool emove, nmove, smove, wmove;
+	//pointer for each relivant enode
+	e_Node * fpos, * fneg, * spos, * sneg, * loc;
+	//pairs of all relivant locations for this m_node
 	pair<int,int> * start, * current, * finish;
 
 	start = mobnode->getLocation();
 	finish = mobnode->getGoal();
 	current = start;
-	startpos = getEnode(start);
 
-
+	//until path is found to finish
 	while (current != finish)
 	{
-		/*obtain Moore neighborhood using 4 cardinal points along with
-		the traversability of those points*/
-		n = getEnode(current->first, current->second - 1);
-		nmove = ckTraversable(n);
+		//get enode mnode is currently in
+		loc = getEnode(start);
+		//fill e_node pointers
+		fpos = getEnode(current->first+1,current->second);
+		fneg = getEnode(current->first-1,current->second);
+		spos = getEnode(current->first,current->second+1);
+		sneg = getEnode(current->first,current->second-1);
 
-		w = getEnode(current->first - 1, current->second);
-		wmove = ckTraversable(w);
+		//find most desirable direction
+		int f = finish->first - current->first;
+		int s = finish->second - current->second;
 
-		s = getEnode(current->first, current->second - 1);
-		smove = ckTraversable(s);
+		//prefer to move in direction closest to 0 distance
+		//move in direction furthest from 0 distance
+		//move away from direction furthest from 0
+		//move away from direction closest to 0
 
-		e = getEnode(current->first + 1, current->second);
-		emove = ckTraversable(e);
-
-		/*Determine the next step by aligning the x,y coordinates of current
-		 with the coordinates of goal. At the establishment of a next step
-		 add that coordinate to the path of the function parameter */
-		if (current->first != finish->first || current->second != finish->second)
+		if (abs(f) <= abs(s) && f != 0)//prefer f
 		{
-			if (current->first != finish->first)
+			if (f > 0 && s > 0)//f pos s pos
 			{
-				if (emove || wmove)
+				if (fpos->isTraversable())
 				{
-					if (current->first > finish->first)
-						current->first = current->first - 1;
-					else if (current->first < finish->first)
-						current->first = current->first + 1;
+					current->first ++;
 				}
-
-			}
-			else //(current->second != finish->second)
-			{
-				if (nmove || smove)
+				else if (spos->isTraversable())
 				{
-					if (current->second > finish->second)
-						current->second = current->second - 1;
-					else if (current->second < finish->second)
-						current->second = current->second + 1;
+					current->second ++;
+				}
+				else if (sneg->isTraversable())
+				{
+					current->second --;
+				}
+				else if (fneg->isTraversable())
+				{
+					current->first --;
 				}
 			}
-
-			mobnode->path.push_back(current);
+			else if (f < 0 && s > 0)//f neg s pos
+			{
+				if (fneg->isTraversable())
+				{
+					current->first --;
+				}
+				else if (spos->isTraversable())
+				{
+					current->second ++;
+				}
+				else if (sneg->isTraversable())
+				{
+					current->second --;
+				}
+				else if (fpos->isTraversable())
+				{
+					current->first ++;
+				}
+			}
+			else if (f > 0 && s < 0)//f pos s neg
+			{
+				if (fpos->isTraversable())
+				{
+					current->first ++;
+				}
+				else if (sneg->isTraversable())
+				{
+					current->second --;
+				}
+				else if (spos->isTraversable())
+				{
+					current->second ++;
+				}
+				else if (fneg->isTraversable())
+				{
+					current->first --;
+				}
+			}
+			else if (f < 0 && s < 0)//f neg s neg
+			{
+				if (fneg->isTraversable())
+				{
+					current->first --;
+				}
+				else if (sneg->isTraversable())
+				{
+					current->second --;
+				}
+				else if (spos->isTraversable())
+				{
+					current->second ++;
+				}
+				else if (fpos->isTraversable())
+				{
+					current->first ++;
+				}
+			}
 		}
-	}
+		else//prefer s
+		{
+			if (s > 0 && f > 0)//s pos f pos
+			{
+				if (spos->isTraversable())
+				{
+					current->second ++;
+				}
+				else if (fpos->isTraversable())
+				{
+					current->first ++;
+				}
+				else if (fneg->isTraversable())
+				{
+					current->first --;
+				}
+				else if (sneg->isTraversable())
+				{
+					current->second --;
+				}
+			}
+			else if (s < 0 && f > 0)//s neg f pos
+			{
+				if (sneg->isTraversable())
+				{
+					current->second --;
+				}
+				else if (fpos->isTraversable())
+				{
+					current->first ++;
+				}
+				else if (fneg->isTraversable())
+				{
+					current->first --;
+				}
+				else if (spos->isTraversable())
+				{
+					current->second ++;
+				}
+			}
+			else if (s > 0 && f < 0)//s pos f neg
+			{
+				if (spos->isTraversable())
+				{
+					current->second ++;
+				}
+				else if (fneg->isTraversable())
+				{
+					current->first --;
+				}
+				else if (fpos->isTraversable())
+				{
+					current->first ++;
+				}
+				else if (sneg->isTraversable())
+				{
+					current->second --;
+				}
+			}
+			else if (s < 0 && f < 0)//s neg f neg
+			{
+				if (sneg->isTraversable())
+				{
+					current->second --;
+				}
+				else if (fneg->isTraversable())
+				{
+					current->first --;
+				}
+				else if (fpos->isTraversable())
+				{
+					current->first ++;
+				}
+				else if (spos->isTraversable())
+				{
+					current->second ++;
+				}
+			}
+		}
 
+		mobnode->path.push_back(current);
+	}
 }
 
 //trip planner
@@ -111,7 +246,6 @@ void Dispatcher::move (m_Node * mobnode)
 	e_Node * tempE;
 	m_Node * tempM;
 
-
 	//if no path
 	if (mobnode->path.size() == 0)
 	{
@@ -132,12 +266,6 @@ void Dispatcher::move (m_Node * mobnode)
 	//find enode to hold mnode
 	tempE = getEnode(mobnode->getLocation());
 	//add mnode to enode
-	/*
-	tempE->moblist.addElement();
-	tempM = tempE->moblist[tempE->moblist.size()];
-	tempM = mobnode;
-	*/
-	//just adding element to the end of the list of new enode
 	tempE->moblist.push_back(mobnode);
 }
 
@@ -178,10 +306,6 @@ void Dispatcher::buildMap (pair<int,int> size, pair<int,int> type)
 				theENode->setTraversable(true);
 
 				//add traversable list
-				/*
-				traversableENodes.addElement();
-				tempE = traversableENodes[traversableENodes.size()];
-				tempE = theENode;*/
 				traversableENodes.push_back(theENode);
 			}
 			else
@@ -190,11 +314,6 @@ void Dispatcher::buildMap (pair<int,int> size, pair<int,int> type)
 			}
 
 			//add to eNodes
-			/*
-			eNodes.addElement();
-			tempE = eNodes[eNodes.size()];
-			tempE = theENode;
-			*/
 			eNodes.push_back(theENode);
 
 			//add to map
@@ -219,11 +338,6 @@ void Dispatcher::buildm_Node (int num)
 		anMNode->setLocation(tripPlanner());
 		anMNode->setId(z);
 
-		/*
-		mNodes.addElement();
-		tempM = mNodes[mNodes.size()];
-		tempM = anMNode;
-		*/
 		mNodes.push_back(anMNode);
 	}
 }
@@ -285,17 +399,14 @@ void Dispatcher::simSetup (pair<int,int> size, pair<int,int> type, int nodes)
 	buildMap(size, type);
 	buildm_Node(nodes);
 
-	/*
 	//build traversable nodes list
 	for (int x = 0; x < eNodes.size(); x++)
 	{
 		if (eNodes[x]->isTraversable())
 		{
-			traversableENodes.addElement();
-			traversableENodes[traversableEnodes.size()] = eNodes[x];
+			traversableENodes.push_back(eNodes[x]);
 		}
 	}
-	*/
 }
 
 //run
@@ -309,7 +420,7 @@ void Dispatcher::runSim (pair<int,int> size, pair<int,int> type, int nodes)
 	{
 		for (int i = 0; i < mNodes.size(); i++)
 		{
-			//move(mNodes[i]);
+			move(mNodes[i]);
 		}
 
 		displayMap();
@@ -390,9 +501,9 @@ void Dispatcher::setupFile ()
 //fileSetup + name
 void Dispatcher::setupFile (string fileName)
 {
-	out = new ofstream;
+	out = new ofstream();
 
-	out->open(fileName.c_str());
+	out->open(fileName);
 }
 
 //get e_Node using coord variable
