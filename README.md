@@ -21,3 +21,5 @@ no more seg fault.
 
 Output file working, data printing to it.
 inf loop somewhere inside of the dispatcher.move();. I think pathfinder still needs to be finished?
+
+Removed the files for dArray and coord which are no longer used.
