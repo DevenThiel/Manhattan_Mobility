@@ -24,9 +24,10 @@ void simulate(int,pair<int,int>,pair<int,int>,int);
 
 int main (int argc, char *argv[])
 {
+	srand (time(NULL));
 
 	//default program values, can be changed via parameters, see --help
-	int time = 0;
+	int simclock = 0;
 	pair<int,int> size;
 	size.first = 3;
 	size.second = 3;
@@ -49,17 +50,17 @@ int main (int argc, char *argv[])
 			{
 				help();
 			}
-			//time to run for
+			//simclock to run for
 			else if (strcmp(argv[count], "-t") == 0 )
 			{
 				if (count+1 < argc && argv[count+1][0] != '-')
 				{
 					count++;
-					time = stringToInt(argv[count]);
+					simclock = stringToInt(argv[count]);
 				}
 				else
 				{
-					cout << "Invalid string for time option.\n";
+					cout << "Invalid string for simclock option.\n";
 				}
 			}
 			//map size
@@ -165,7 +166,7 @@ int main (int argc, char *argv[])
 		}
     }
 
-	simulate(time,size,type,m_Nodes);
+	simulate(simclock,size,type,m_Nodes);
 
   return 0;
 }
@@ -189,7 +190,7 @@ void help()
 	cout << "\t-H\t\t\t\tHelp menu\n";
 	cout << "\t-?\n";
 	cout << "\t--Help\n";
-	cout << "\t-t\t\t\t\ttime <cycles>\n";
+	cout << "\t-t\t\t\t\tsimclock <cycles>\n";
 	cout << "\t-Ms\t\t\t\tmap size <x,y>\n";
 	cout << "\t-Mt\t\t\t\tmap type <streets x, streets y>\n";
 	cout << "\t-m\t\t\t\tmobile nodes <nodes>\n";

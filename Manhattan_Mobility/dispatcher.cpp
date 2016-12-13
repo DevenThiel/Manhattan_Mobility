@@ -47,13 +47,10 @@ void Dispatcher::pathfinder (m_Node * mobnode)
 	finish = mobnode->getGoal();
 	current = start;
 
-	cout << "mobid:" << mobnode->getId() << endl;
 	//until path is found to finish
 	while (!(current->first == finish->first && current->second == finish->second))
 	{
 
-		cout << "current:" << current->first << "," << current->second <<
-		" | finish:" << finish->first << "," << finish->second << endl;
 		//get enode mnode is currently in
 		loc = getEnode(start);
 		//fill e_node pointers
@@ -272,7 +269,6 @@ void Dispatcher::pathfinder (m_Node * mobnode)
 pair<int,int> * Dispatcher::tripPlanner ()
 {
 	pair<int,int> * goal;
-	srand (time(0));
 	e_Node * destination;
 	int r = rand() % traversableENodes.size();
 	cout << "r:" << r << " - ";
@@ -300,8 +296,6 @@ void Dispatcher::move (m_Node * mobnode)
 	//get enode holding mnode
 	tempE = getEnode(mobnode->getLocation());
 	//remove mnode from enode
-	cout << "test tempE:" << tempE << " mobnode:" << mobnode << " mobnodeid:" << mobnode->getId() << endl;
-	//issue at this point because tempE still 0x0
 	if (tempE->findMNode(mobnode->getId()) == -1)
 	{
 		cout << "not found";
@@ -346,7 +340,6 @@ void Dispatcher::buildMap (pair<int,int> size, pair<int,int> type)
 		{
 			//add to e_Node list
 			theENode = new e_Node;
-			cout << "node: " << theENode << endl;
 			theENode->setPermeable(false);
 			theENode->setTransmittable(false);
 			theENode->setLocation(x,y);
@@ -568,12 +561,9 @@ void Dispatcher::setupFile (string fileName)
 //get e_Node using coord variable
 e_Node * Dispatcher::getEnode (pair<int,int> * inCoord)
 {
-	cout << "incoord:" << inCoord->first << "," << inCoord->second << endl;
-	cout << "eNodes.size():" << eNodes.size() << endl;
 	for (int i = 0; i <= eNodes.size(); i++)
 	{
 		pair<int,int> * temploc = eNodes[i]->getLocation();
-		cout << "temploc:" << temploc->first << "," << temploc->second << " VS inCoord:" << inCoord->first << "," << inCoord->second << endl;
 		if (temploc->first == inCoord->first && temploc->second == inCoord->second)
 		{
 			return eNodes[i];
