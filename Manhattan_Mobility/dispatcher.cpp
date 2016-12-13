@@ -11,6 +11,7 @@
 #include "dispatcher.h"
 
 #include <cmath>
+#include <ctime>
 
 Dispatcher::Dispatcher()
 {
@@ -44,9 +45,13 @@ void Dispatcher::pathfinder (m_Node * mobnode)
 	finish = mobnode->getGoal();
 	current = start;
 
+	cout << "mobid:" << mobnode->getId() << endl;
 	//until path is found to finish
-	while (current != finish)
+	while (!(current->first == finish->first && current->second == finish->second))
 	{
+
+		cout << "current:" << current->first << "," << current->second <<
+		" | finish:" << finish->first << "," << finish->second << endl;
 		//get enode mnode is currently in
 		loc = getEnode(start);
 		//fill e_node pointers
@@ -231,12 +236,13 @@ void Dispatcher::pathfinder (m_Node * mobnode)
 pair<int,int> * Dispatcher::tripPlanner ()
 {
 	pair<int,int> * goal;
-	srand (time(NULL));
+	srand (time(0));
 	e_Node * destination;
-	int l = traversableENodes.size();
-	int r = rand() % l;
-	destination = traversableENodes[r];
+	int r = rand() % traversableENodes.size();
+	cout << "r:" << r << " - ";
+	destination = traversableENodes.at(r);
 	goal = destination->getLocation();
+	cout << "rand:" << goal->first << "," << goal->second << endl;
 	return goal;
 }
 
@@ -247,7 +253,7 @@ void Dispatcher::move (m_Node * mobnode)
 	m_Node * tempM;
 
 	//if no path
-	if (mobnode->path.size() == 0)
+	while (mobnode->path.size() == 0)
 	{
 		//trip planner
 		mobnode->setGoal(tripPlanner());
@@ -258,7 +264,16 @@ void Dispatcher::move (m_Node * mobnode)
 	//get enode holding mnode
 	tempE = getEnode(mobnode->getLocation());
 	//remove mnode from enode
-	tempE->moblist.erase(tempE->moblist.begin() + tempE->findMNode(mobnode->getId()));
+	cout << "test tempE:" << tempE << " mobnode:" << mobnode << " mobnodeid:" << mobnode->getId() << endl;
+	//issue at this point because tempE still 0x0
+	if (tempE->findMNode(mobnode->getId()) == -1)
+	{
+		cout << "not found";
+	}
+	else
+	{
+		tempE->moblist.erase(tempE->moblist.begin() + tempE->findMNode(mobnode->getId()));
+	}
 	//update m_node location
 	//vector pop, should this be changed to a queue?
 	mobnode->setLocation(mobnode->path.front());
@@ -298,6 +313,7 @@ void Dispatcher::buildMap (pair<int,int> size, pair<int,int> type)
 			cout << "node: " << theENode << endl;
 			theENode->setPermeable(false);
 			theENode->setTransmittable(false);
+			theENode->setLocation(x,y);
 
 			if (x % tx == 0 || y % ty == 0)
 			{
@@ -318,7 +334,7 @@ void Dispatcher::buildMap (pair<int,int> size, pair<int,int> type)
 
 			//add to map
 			theMap.setNode(x,y,theENode);
-			if (theMap.getNode(x,y) == nullptr)
+			if (theMap.getNode(x,y) == 0)
 			{
 				cout << "null e-node at" << x << "," << y << endl;
 			}
@@ -339,6 +355,7 @@ void Dispatcher::buildm_Node (int num)
 		anMNode->setId(z);
 
 		mNodes.push_back(anMNode);
+
 	}
 }
 
@@ -406,6 +423,12 @@ void Dispatcher::simSetup (pair<int,int> size, pair<int,int> type, int nodes)
 		{
 			traversableENodes.push_back(eNodes[x]);
 		}
+	}
+
+	//place mnodes into starting enodes
+	for (int i = 0; i < mNodes.size(); i++)
+	{
+		theMap.getNode(mNodes[i]->getLocation())->moblist.push_back(mNodes[i]);
 	}
 }
 
@@ -509,18 +532,18 @@ void Dispatcher::setupFile (string fileName)
 //get e_Node using coord variable
 e_Node * Dispatcher::getEnode (pair<int,int> * inCoord)
 {
-	int l = eNodes.size();
-	e_Node * theNode;
-	for (int i = 0; i <= l; i++)
+	cout << "incoord:" << inCoord->first << "," << inCoord->second << endl;
+	cout << "eNodes.size():" << eNodes.size() << endl;
+	for (int i = 0; i <= eNodes.size(); i++)
 	{
-		theNode = eNodes[i];
-		if (theNode->getLocation() == inCoord)
+		pair<int,int> * temploc = eNodes[i]->getLocation();
+		cout << "temploc:" << temploc->first << "," << temploc->second << " VS inCoord:" << inCoord->first << "," << inCoord->second << endl;
+		if (temploc->first == inCoord->first && temploc->second == inCoord->second)
 		{
 			return eNodes[i];
 		}
-		else
-		return NULL;
 	}
+	return 0;
 }
 
 //get e_Node using integer input

@@ -124,9 +124,7 @@ bool e_Node::isLandmark()
 //find m_Node in moblist
 int e_Node::findMNode(int search)
 {
-    int l = moblist.size();
-
-    for(int i=0; i < moblist.size(); i++)
+  for(int i=0; i < this->moblist.size(); i++)
     {
         if (moblist[i]->getId() == search)
         return i;

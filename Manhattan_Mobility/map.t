@@ -88,7 +88,7 @@ void Map<T>::addMapRow ()
 	//increase vector size of each column
 	for (int i = 0; i < mapSize.first; i++)
 	{
-		map[i]->push_back(new T());
+		map[i]->push_back(0);
 	}
 }
 
@@ -105,7 +105,7 @@ void Map<T>::addMapCol()
 	//fill new column with T(); to row size
 	for (int i = 0; i < mapSize.second; i++)
 	{
-		map[mapSize.first - 1]->push_back(new T());
+		map[mapSize.first - 1]->push_back(0);
 	}
 }
 
