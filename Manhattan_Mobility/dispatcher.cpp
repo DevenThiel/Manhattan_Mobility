@@ -38,6 +38,8 @@ void Dispatcher::pathfinder (m_Node * mobnode)
 {
 	//pointer for each relivant enode
 	e_Node * fpos, * fneg, * spos, * sneg, * loc;
+	//traversability
+	bool tfpos, tfneg, tspos, tsneg;
 	//pairs of all relivant locations for this m_node
 	pair<int,int> * start, * current, * finish;
 
@@ -59,6 +61,39 @@ void Dispatcher::pathfinder (m_Node * mobnode)
 		fneg = getEnode(current->first-1,current->second);
 		spos = getEnode(current->first,current->second+1);
 		sneg = getEnode(current->first,current->second-1);
+		//fill traversability
+		if (fpos != 0)
+		{
+			tfpos = fpos->isTraversable();
+		}
+		else
+		{
+			tfpos = false;
+		}
+		if (fneg != 0)
+		{
+			tfneg = fneg->isTraversable();
+		}
+		else
+		{
+			tfneg = false;
+		}
+		if (spos != 0)
+		{
+			tspos = spos->isTraversable();
+		}
+		else
+		{
+			tspos = false;
+		}
+		if (sneg != 0)
+		{
+			tsneg = sneg->isTraversable();
+		}
+		else
+		{
+			tsneg = false;
+		}
 
 		//find most desirable direction
 		int f = finish->first - current->first;
@@ -73,76 +108,77 @@ void Dispatcher::pathfinder (m_Node * mobnode)
 		{
 			if (f > 0 && s > 0)//f pos s pos
 			{
-				if (fpos->isTraversable())
+				//fpos 0x0
+				if (tfpos)
 				{
 					current->first ++;
 				}
-				else if (spos->isTraversable())
+				else if (tspos)
 				{
 					current->second ++;
 				}
-				else if (sneg->isTraversable())
+				else if (tsneg)
 				{
 					current->second --;
 				}
-				else if (fneg->isTraversable())
+				else if (tfneg)
 				{
 					current->first --;
 				}
 			}
 			else if (f < 0 && s > 0)//f neg s pos
 			{
-				if (fneg->isTraversable())
+				if (tfneg)
 				{
 					current->first --;
 				}
-				else if (spos->isTraversable())
+				else if (tspos)
 				{
 					current->second ++;
 				}
-				else if (sneg->isTraversable())
+				else if (tsneg)
 				{
 					current->second --;
 				}
-				else if (fpos->isTraversable())
+				else if (tfpos)
 				{
 					current->first ++;
 				}
 			}
 			else if (f > 0 && s < 0)//f pos s neg
 			{
-				if (fpos->isTraversable())
+				if (tfpos)
 				{
 					current->first ++;
 				}
-				else if (sneg->isTraversable())
+				else if (tsneg)
 				{
 					current->second --;
 				}
-				else if (spos->isTraversable())
+				else if (tspos)
 				{
 					current->second ++;
 				}
-				else if (fneg->isTraversable())
+				else if (tfneg)
 				{
 					current->first --;
 				}
 			}
 			else if (f < 0 && s < 0)//f neg s neg
 			{
-				if (fneg->isTraversable())
+				if (tfneg)
 				{
 					current->first --;
 				}
-				else if (sneg->isTraversable())
+				else if (tsneg)
 				{
 					current->second --;
 				}
-				else if (spos->isTraversable())
+				else if (tspos)
 				{
 					current->second ++;
 				}
-				else if (fpos->isTraversable())
+				else if (tfpos)
 				{
 					current->first ++;
 				}
@@ -152,76 +188,76 @@ void Dispatcher::pathfinder (m_Node * mobnode)
 		{
 			if (s > 0 && f > 0)//s pos f pos
 			{
-				if (spos->isTraversable())
+				if (tspos)
 				{
 					current->second ++;
 				}
-				else if (fpos->isTraversable())
+				else if (tfpos)
 				{
 					current->first ++;
 				}
-				else if (fneg->isTraversable())
+				else if (tfneg)
 				{
 					current->first --;
 				}
-				else if (sneg->isTraversable())
+				else if (tsneg)
 				{
 					current->second --;
 				}
 			}
 			else if (s < 0 && f > 0)//s neg f pos
 			{
-				if (sneg->isTraversable())
+				if (tsneg)
 				{
 					current->second --;
 				}
-				else if (fpos->isTraversable())
+				else if (tfpos)
 				{
 					current->first ++;
 				}
-				else if (fneg->isTraversable())
+				else if (tfneg)
 				{
 					current->first --;
 				}
-				else if (spos->isTraversable())
+				else if (tspos)
 				{
 					current->second ++;
 				}
 			}
 			else if (s > 0 && f < 0)//s pos f neg
 			{
-				if (spos->isTraversable())
+				if (tspos)
 				{
 					current->second ++;
 				}
-				else if (fneg->isTraversable())
+				else if (tfneg)
 				{
 					current->first --;
 				}
-				else if (fpos->isTraversable())
+				else if (tfpos)
 				{
 					current->first ++;
 				}
-				else if (sneg->isTraversable())
+				else if (tsneg)
 				{
 					current->second --;
 				}
 			}
 			else if (s < 0 && f < 0)//s neg f neg
 			{
-				if (sneg->isTraversable())
+				if (tsneg)
 				{
 					current->second --;
 				}
-				else if (fneg->isTraversable())
+				else if (tfneg)
 				{
 					current->first --;
 				}
-				else if (fpos->isTraversable())
+				else if (tfpos)
 				{
 					current->first ++;
 				}
-				else if (spos->isTraversable())
+				else if (tspos)
 				{
 					current->second ++;
 				}
