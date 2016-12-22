@@ -39,3 +39,4 @@ fixed rand issue of same number
 12/21/16
 
 Currently there is a loop somewhere inside of move()
+pathfinder seems to contain the loop

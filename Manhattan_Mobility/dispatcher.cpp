@@ -293,6 +293,8 @@ void Dispatcher::move (m_Node * mobnode)
 		pathfinder(mobnode);
 	}
 
+	cout << "mnode - id: " << mobnode->getId() << " loc: " << mobnode->getLocation()->first << "," << mobnode->getLocation()->second << " goto: " << mobnode->path.front()->first << "," << mobnode->path.front()->second << endl;
+
 	//get enode holding mnode
 	tempE = getEnode(mobnode->getLocation());
 	//remove mnode from enode
