@@ -23,3 +23,19 @@ Output file working, data printing to it.
 inf loop somewhere inside of the dispatcher.move();. I think pathfinder still needs to be finished?
 
 Removed the files for dArray and coord which are no longer used.
+
+12/12/16
+
+Removed *.o accidently pushed
+
+12/13/16
+
+fixed pathfinding bugs.
+
+fixed pathfinding null object call
+
+fixed rand issue of same number
+
+12/21/16
+
+Currently there is a loop somewhere inside of move()
